@@ -1,0 +1,487 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+typedef struct student                               
+{
+	
+	char num[10];   //工号
+    char name[15]; //姓名
+	char answer[30];//性别
+	float score;//性别
+
+}Student;
+
+typedef struct paper                               
+{
+	
+	int num;   //题号
+    char option; //选项
+	float score;//分数
+
+}Paper;
+
+Student stu[60];  //员工定义100
+Paper pap[30];  //员工定义100
+
+
+int n=0,m=0;
+
+
+int menu_select()       //菜单显示实现交互                       
+{
+    char c;
+    do{
+        system("cls");
+		
+		printf("\n");
+		printf("\t\t      试卷自动处理系统         \n");
+		printf("\n");
+		printf("\t\t    1. 添加学生答卷并保存  2. 添加学生标准答案并保存       \n");   		
+		printf("\t\t    3. 统计并生成文件      4. 查询成绩       \n");   
+		printf("\t\t    5. 学生试卷的查询      6. 标准答案的查询      \n");	
+		printf("\t\t    0. 退出程序                \n");
+		printf("\t\t  										\n");
+		printf("\t\t请您选择(0-6):");
+		
+		
+        c = getchar();
+    } while (c<'0' || c>'7');
+    return (c - '0');                                      
+}
+
+//*********************************************************************//
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+
+void findStuPaper()
+{
+	
+		char s[10];
+		int i = 0;
+        printf("\t请输入想查询的姓名:");
+        scanf("\t%s", s);
+	
+        while (strcmp(stu[i].name,s) != 0 && i<n) i++;            //比较stu[i].num与所输入学号是否相同//
+        if (i == n)
+        {
+            printf("\t没有此人!\n");
+			system("pause");  
+           return;
+		     
+        }
+		else{
+			printf("选项字符串的内容\n"); 
+			printf("%s",stu[i].answer);
+		}
+			system("pause"); 
+ } 
+ 
+ 
+void findPaper()
+{
+	
+		int s;
+		int i = 0;
+        printf("\t请输入想查询的题号:");
+        scanf("\t%d",&s);
+	
+        while (pap[i].num!=s  && i<m) i++;            //比较stu[i].num与所输入学号是否相同//
+        if (i == m)
+        {
+            printf("\t没有该题号!\n");
+			system("pause");  
+           return;
+		     
+        }
+		else{
+			printf("正确选项\t得分数值\n");
+			printf("%c\t%.2f",pap[i].option,pap[i].score);
+		}
+			system("pause"); 
+ } 
+
+void addStudent()      //添加学生考卷信息                                
+{
+	int sign;
+int i;
+
+	 printf("--------写入文件完毕----\n");
+	FILE *fpWrite=fopen("stuPaper.txt","w");
+if(fpWrite==NULL)
+ {
+  printf("Can't open the file!\n");
+ }
+		  while (1)   
+		  {
+			  
+				  
+				  printf("学生序号:\n"); 
+				  scanf("%s", stu[n].num);
+
+				  printf("姓名:\n");
+				  scanf("%s", stu[n].name);
+				  
+
+				 
+
+				  printf("选项字符串:\n");
+
+			
+					getchar();
+				gets(stu[n].answer);
+
+				 for( i=0;i<6;i++)
+				  {		
+
+					   if((stu[n].answer[i]>='A')&&(stu[n].answer[i]<='D'))
+						{
+						stu[n].answer[i]=stu[n].answer[i];
+					
+
+						}
+						 if((stu[n].answer[i]<'A')||(stu[n].answer[i]>'D'))
+						{
+						stu[n].answer[i]='X';
+					
+
+						}
+						
+					   if(stu[n].answer[i]==' ')
+					   {
+						   stu[n].answer[i]='X';
+					   }
+					 if(stu[n].answer[i]>='a'&& stu[n].answer[i]<='z')
+					   {
+						stu[n].answer[i]='X';
+					   }
+
+				 }
+						n++;
+				 printf("学生序号\t姓名\t选项字符串\n");
+				   for(  int i=0;i<n;i++)
+				  {
+					   
+					printf("%s\t%s\t%s\n",stu[i].num,stu[i].name,stu[i].answer);
+				  }
+				     printf("--------写入文件完毕----\n");
+	
+					
+				   
+				  printf("是否继续添加?(1/0)\n");
+				  scanf("%d", &sign);
+				  
+				  if(sign==0)
+				  {
+					  break;
+				  }
+				 
+				 
+			  }
+		  
+
+		for( i=0;i<n;i++)
+	{
+	
+		fprintf(fpWrite,"%s\t",stu[i].num);
+		fprintf(fpWrite,"%s\t",stu[i].name);
+		fprintf(fpWrite,"%s\t",stu[i].answer);
+		
+		fprintf(fpWrite,"\n");
+
+	}
+
+
+			fclose(fpWrite);
+    
+		system("pause"); 
+
+}
+
+void addPaper()      //添加学生考卷信息                                
+{
+	int sign;
+	int i;
+	 printf("--------写入文件完毕----\n");
+	FILE *fpWrite=fopen("answer.txt","w");
+if(fpWrite==NULL)
+ {
+  printf("Can't open the file!\n");
+ }
+		  while (1)   
+		  {
+			  
+				  printf("题号:\n"); 
+				  scanf("%d", &pap[m].num);
+					getchar();
+				  printf("本题正确选项字母:\n");
+				  scanf("%c",&pap[m].option);
+				  
+					getchar();
+				 
+
+				  printf("本题分值:\n");
+				scanf("%f",&pap[m].score);
+
+				
+
+				 printf("题号\t本题正确选项字母\t本题分值\n");
+				  
+					   
+					printf("%d\t%c\t%.2f\n",pap[m].num,pap[m].option,pap[m].score);
+				
+
+				
+				   
+				  printf("是否继续添加?(1/0)\n");
+				  scanf("%d", &sign);
+				  m++;
+
+
+				  if(sign==0)
+				  {
+					  break;
+				  }
+				 
+				 
+			  }
+			  	for( i=0;i<m;i++)
+	{
+	
+		fprintf(fpWrite,"%d\t",pap[m].num);
+		fprintf(fpWrite,"%c\t",pap[m].option);
+		fprintf(fpWrite,"%.2f\t",pap[m].option);
+	
+	
+
+	}
+
+
+			fclose(fpWrite);
+    
+		system("pause"); 
+}
+		  
+void sort()
+{
+	int i;
+	
+	for( i=0;i<n;i++)
+	{
+		float sum=0; 
+		for(int j=0;j<40;j++)
+		{
+			if(stu[i].answer[j]==pap[j].option)
+			{
+				sum+=pap[j].score;
+			}
+		}
+		stu[i].score=sum;
+		
+	 } 
+	 float avg=0; 
+	 for( i=0;i<n;i++)
+	{
+	
+		avg+=stu[i].score;
+		
+	 } 
+	 avg=avg/n;//平均成绩
+	  float max=stu[0].score,min=stu[0].score; 
+	  float sum=0;
+	  float biao=0;
+	 for( i=0;i<n;i++)
+	{
+		if(stu[i].score>max)
+		{
+			max=stu[i].score;//最高分 
+		}
+	
+		if(stu[i].score<min)
+		{
+			min=stu[i].score;//最低分 
+		}	
+		sum+=(stu[i].score-avg)*(stu[i].score-avg);
+	 }
+	 
+	    biao=sqrt(sum);
+	    
+	  	 printf("--------写入文件完毕----\n");
+	FILE *fpWrite=fopen("sort.txt","w");
+if(fpWrite==NULL)
+ {
+  printf("Can't open the file!\n");
+ }
+ int you=0,liang=0,zhongdeng=0,jige=0,notjige=0;
+ for(i=0;i<n;i++)
+ {
+ 	if(stu[i].score<=100&&stu[i].score>=90)
+ 	{
+ 		you++;
+	 }
+	 if(stu[i].score<=89&&stu[i].score>=80)
+ 	{
+ 		liang++;
+	 }
+	 if(stu[i].score<=79&&stu[i].score>=70)
+ 	{
+ 		zhongdeng++;
+	 }
+	 if(stu[i].score<=69&&stu[i].score>=60)
+ 	{
+ 		jige++;
+	 }
+	 if(stu[i].score<=59&&stu[i].score>=0)
+ 	{
+ 		notjige++;
+	 }
+ }
+ float you1=(you*1.0/n)*100;
+ float liang1=(liang*1.0/n)*100;
+ float zhongdeng1=(zhongdeng*1.0/n)*100;
+ float jige1=(jige*1.0/n)*100;
+ float notjige1=(notjige*1.0/n)*100;
+ 
+ 
+ 
+ 	printf("平均成绩\t最高分\t最低分\t标准差\n");
+  	
+ 
+ 	printf("%.2f\t",avg);
+		printf("%.2f\t",max);
+		printf("%.2f\t",min);
+		printf("%.2f\n",biao);
+			printf("优\t百分比\t良\t百分比\t中等\t百分比\t及格\t百分比\t不及格\t百分比\n");
+		printf("%d\t%0.2f\t",you,you1);
+	printf("%d\t%0.2f\t",zhongdeng,zhongdeng1);
+	printf("%d\t%0.2f\t",liang,liang1);
+	printf("%d\t%0.2f\t",jige,jige1);
+	printf("%d\t%0.2f\n",notjige,notjige1);
+	
+	
+	
+		fprintf(fpWrite,"平均成绩\t最高分\t最低分\t标准差\t优\t百分比\t良\t百分比\t中等\t百分比\t及格\t百分比\t不及格\t百分比");
+  	
+		fprintf(fpWrite,"%.2f\t",avg);
+		fprintf(fpWrite,"%.2f\t",max);
+		fprintf(fpWrite,"%.2f\t",min);
+		fprintf(fpWrite,"%.2f\t",biao);
+		fprintf(fpWrite,"%d\t%0.2f\t",you,you1);
+	fprintf(fpWrite,"%d\t%0.2f\t",zhongdeng,zhongdeng1);
+	fprintf(fpWrite,"%d\t%0.2f\t",liang,liang1);
+	fprintf(fpWrite,"%d\t%0.2f\t",jige,jige1);
+	fprintf(fpWrite,"%d\t%0.2f\t",notjige,notjige1);
+	
+
+			fclose(fpWrite);
+    
+		system("pause"); 
+
+}
+	  
+
+void list() 
+{
+	int i;
+int you=0,notjige=0; 
+	printf("优秀的人的姓名\n");		
+	for( i=0;i<n;i++)
+	{		
+	if(stu[i].score<=100&&stu[i].score>=90)
+ 	{
+ 		printf("%s\t",stu[i].name);
+ 		you++;
+	 }
+		
+	}
+		printf("\n");
+		printf("优秀的人数\n");	
+			printf("%d\n",you);
+		
+		printf("不及格的姓名\n");		
+	for( i=0;i<n;i++)
+	{		
+
+	 if(stu[i].score<=59&&stu[i].score>=0)
+ 	{
+ 			printf("%s\t",stu[i].name);
+ 		notjige++;
+	 }
+	
+	}
+		printf("\n");
+		printf("不及格的人数\n");	
+			printf("%d\n",notjige);
+		
+	system("pause");  
+}
+ 
+
+
+
+
+
+
+int main()
+{
+    
+	char sign;
+	
+	while (sign != 'n'&&sign != 'N')      {
+		
+		
+		for (;;)                                                 
+		{
+			
+			switch (menu_select())                               
+			{
+				
+			case 1:{
+				
+				 addStudent();
+				break;}
+			case 2:{
+				
+				addPaper();
+				break;
+				   }
+			case 3:{
+				
+				sort();
+				break;}
+			case 4:{
+				
+			list();
+				break;}
+			case 5:{
+				
+				findStuPaper();
+				
+				break;}
+		
+				
+			case 6:{
+				
+				findPaper();
+				break;
+				   }
+				
+				
+				
+			case 0:{
+				
+				printf("系统结束\n");
+				exit(0);
+				   }
+				
+			}
+			
+		}
+		
+	}
+	
+	return 0;
+    
+}
+
+
+
